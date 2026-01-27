@@ -1,10 +1,12 @@
 package org.iesbelen.videoclub.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,12 +17,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Idioma {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_idioma")
-    @EqualsAndHashCode.Include
+    //@EqualsAndHashCode.Include
     private Long id;
 
     private String nombre;
@@ -29,5 +32,15 @@ public class Idioma {
     // 'mappedBy' indica el nombre del atributo en la clase Pelicula
     @OneToMany(mappedBy = "idioma")
     @JsonIgnore // Evita que al pedir un idioma se genere un bucle infinito de JSON
-    private Set<Pelicula> peliculas = new HashSet<>();
+    @ToString.Exclude
+    private List<Pelicula> peliculaIdioma;
+
+    /*
+    @OneToMany(mappedBy = "idiomaOriginal")
+    @JsonIgnore
+    @ToString.Exclude
+    private List<Pelicula> peliculasIdiomaOriginal;
+*/
+
+
 }

@@ -36,7 +36,7 @@ public class PeliculaService {
                 .map(p -> {
                     // Aseguramos que el ID del objeto que llega sea el de la URL
                     // para evitar crear un registro nuevo por error
-                    pelicula.setId(id);
+                    pelicula.setIdPelicula(id);
                     return this.peliculaRepository.save(pelicula);
                 })
                 .orElseThrow(() -> new PeliculaNotFoundException(id));

@@ -52,6 +52,6 @@ public class DataLoader implements CommandLineRunner {
 
         peliculaRepository.save(p1);
 
-        log.info("Datos cargados: Película '{}' guardada con ID {}", p1.getTitulo(), p1.getId());
+        log.info("Datos cargados: Película '{}' guardada con ID {}", p1.getTitulo(), p1.getIdPelicula());
     }
 }
