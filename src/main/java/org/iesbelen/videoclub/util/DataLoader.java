@@ -29,6 +29,11 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.info("Cargando datos de prueba...");
 
+        if (categoriaRepository.count() > 0) {
+            log.info("Datos ya existentes. Saltando carga inicial");
+            return;
+        }
+
         // 1. Crear e insertar Idiomas
         Idioma español = Idioma.builder().nombre("Español").build();
         Idioma ingles = Idioma.builder().nombre("Inglés").build();

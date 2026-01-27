@@ -76,7 +76,7 @@ public class CategoriaService {
                         c.getUltimaAcutalizacion(),
                         c.getPeliculas() != null ? c.getPeliculas().size() : 0
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
