@@ -2,13 +2,17 @@ package org.iesbelen.videoclub.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.spi.ObjectThreadContextMap;
 import org.iesbelen.videoclub.domain.Pelicula;
 import org.iesbelen.videoclub.service.PeliculaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -23,11 +27,16 @@ public class PeliculaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pelicula>> all() {
-        log.info("Accediendo a todas las películas");
-        List<Pelicula> lista = this.peliculaService.all();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<Map<String, Object>> all(@RequestParam(value = "orden", required = false) String[] orden,
+                                              @RequestParam(value = "paginado", required = false) String[] paginado) {
+
+        log.info("Accediendo a películas con orden: {} y paginado: {}", Arrays.toString(orden), Arrays.toString(paginado));
+        Map<String, Object> resultado = this.peliculaService.all(orden,paginado);
+        //List<Pelicula> lista = this.peliculaService.all();
+        return ResponseEntity.ok(resultado);
     }
+
+
 
     @PostMapping
     public ResponseEntity<Pelicula> newPelicula(@Valid @RequestBody Pelicula pelicula) {
