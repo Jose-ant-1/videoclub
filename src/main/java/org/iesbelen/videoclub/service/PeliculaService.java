@@ -23,41 +23,20 @@ public class PeliculaService {
         this.peliculaRepository = peliculaRepository;
     }
 
-    public Map<String,Object> all(String[] orden, String[] paginado) {
+    public List<Pelicula> all() {
+        return this.peliculaRepository.findAll();
+    }
 
-        Sort s = Sort.unsorted();
-        if (orden != null && orden.length == 2) {
-            String columna = orden[0];
-            String sentido = orden[1];
-            s = sentido.equalsIgnoreCase("desc")
-                    ? Sort.by(columna).descending()
-                    : Sort.by(columna).ascending();
-        }
+    public Map<String,Object> all(int pagina, int tamanio) {
+        Pageable paginado = PageRequest.of(pagina, tamanio, Sort.by("idPelicula").ascending());
+        Page<Pelicula> pageAll = this.peliculaRepository.findAll(paginado);
 
-        // 2. Lógica de Paginación (Valores por defecto: pag 0, tamaño 10)
-        int pagina = 0;
-        int tamanio = 10;
-        if (paginado != null && paginado.length == 2) {
-            try {
-                pagina = Integer.parseInt(paginado[0]);
-                tamanio = Integer.parseInt(paginado[1]);
-            } catch (NumberFormatException e) {
-                //log.error("Error convirtiendo parámetros de paginación", e);
-            }
-        }
+        Map<String,Object> response = new HashMap<>();
 
-        // 3. Combinar todo en un objeto Pageable
-        Pageable p = PageRequest.of(pagina, tamanio, s);
-
-        // 4. Consultar al repositorio
-        Page<Pelicula> pageResult = this.peliculaRepository.findAll(p);
-
-        // 5. Construir respuesta con metadatos
-        Map<String, Object> response = new HashMap<>();
-        response.put("peliculas", pageResult.getContent());
-        response.put("totalElementos", pageResult.getTotalElements());
-        response.put("totalPaginas", pageResult.getTotalPages());
-        response.put("paginaActual", pageResult.getNumber());
+        response.put("peliculas", pageAll.getContent());
+        response.put("currentPage", pageAll.getNumber());
+        response.put("totalItem", pageAll.getTotalElements());
+        response.put("totalPages", pageAll.getTotalPages());
 
         return response;
     }

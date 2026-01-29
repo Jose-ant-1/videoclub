@@ -27,13 +27,16 @@ public class PeliculaController {
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> all(@RequestParam(value = "orden", required = false) String[] orden,
-                                              @RequestParam(value = "paginado", required = false) String[] paginado) {
+    public ResponseEntity<?> all(@RequestParam(value = "paginado", required = false) String[] paginado) {
+        if (paginado == null || paginado.length != 2) {
+            log.info("Accediendo a todas las películas sin paginar");
+            return ResponseEntity.ok(this.peliculaService.all());
+        }
+        log.info("Accediendo a películas con paginación");
+        int pagina = Integer.parseInt(paginado[0]);
+        int tamanio = Integer.parseInt(paginado[1]);
 
-        log.info("Accediendo a películas con orden: {} y paginado: {}", Arrays.toString(orden), Arrays.toString(paginado));
-        Map<String, Object> resultado = this.peliculaService.all(orden,paginado);
-        //List<Pelicula> lista = this.peliculaService.all();
-        return ResponseEntity.ok(resultado);
+        return ResponseEntity.ok(this.peliculaService.all(pagina, tamanio));
     }
 
 
